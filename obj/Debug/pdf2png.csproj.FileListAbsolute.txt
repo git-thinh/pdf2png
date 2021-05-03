@@ -10,3 +10,4 @@ D:\tt\core\pdf2png\obj\Debug\pdf2png.exe.manifest
 D:\tt\core\pdf2png\obj\Debug\pdf2png.application
 D:\tt\core\pdf2png\obj\Debug\pdf2png.exe
 D:\tt\core\pdf2png\obj\Debug\pdf2png.pdb
+D:\tt\core\pdf2png\obj\Debug\pdf2png.csprojAssemblyReference.cache

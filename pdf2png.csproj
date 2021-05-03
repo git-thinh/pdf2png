@@ -150,9 +150,6 @@
     <Content Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="pdf2png_TemporaryKey.pfx" />
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
       <Visible>False</Visible>
       <ProductName>.NET Framework 3.5 SP1</ProductName>
