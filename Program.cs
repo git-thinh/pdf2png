@@ -1,16 +1,21 @@
 ﻿using PdfiumViewer;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
+using System.ServiceProcess;
 using System.Text;
 using System.Threading;
 
 namespace pdf2png
 {
-    class App
+    class Program
     {
+        static int m_port_write = 0;
+        static int m_port_read = 0;
+
+        #region [ CODE ]
+
         static RedisBase m_subcriber;
         static bool _subscribe(string channel)
         {
@@ -57,7 +62,6 @@ namespace pdf2png
                 return ms.ToArray();
             }
         }
-
         static void __createDocumentBackground(string file)
         {
             if (File.Exists(file))
@@ -91,25 +95,27 @@ namespace pdf2png
                         sizes.Add(string.Format("{0}:{1}", docId, i), slen);
                     }
 
-                    redis.HMSET("__IMG_RAW_SIZE", sizes);
+                    redis.HMSET("IMG_RAW_SIZE", sizes);
                 }
             }
         }
+        static bool __running = true;
 
-        static int m_port_write = 0;
-        static int m_port_read = 0;
-        static void Main(string[] args)
+        #endregion
+
+        static void __startApp()
         {
-            m_port_write = 1000;
-            m_port_read = 1001;
-            Console.Title = string.Format("__PDF2PNG_IN:{0}-{1}", m_port_write, m_port_read);
+            //File.WriteAllText(@"C:\___.txt", m_port_write.ToString());
+
+            if(m_port_write == 0) m_port_write = 1000;
+            if (m_port_read == 0) m_port_read = 1001;
             m_subcriber = new RedisBase(new RedisSetting(REDIS_TYPE.ONLY_SUBCRIBE, 1001));
             _subscribe("__PDF2PNG_IN");
 
             string[] a;
             string s;
             var bs = new List<byte>();
-            while (true)
+            while (__running)
             {
                 if (!m_subcriber.m_stream.DataAvailable)
                 {
@@ -134,5 +140,43 @@ namespace pdf2png
                 bs.Add(b);
             }
         }
+
+        static void __stopApp()
+        {
+            __running = false;
+        }
+
+
+        #region [ SETUP WINDOWS SERVICE ]
+
+        static Thread __threadWS = null;
+        static void Main(string[] args)
+        {
+            if (Environment.UserInteractive)
+            {
+                StartOnConsoleApp(args);
+                Console.WriteLine("Press any key to stop...");
+                Console.ReadKey(true);
+                Stop();
+            }
+            else using (var service = new Service())
+                    ServiceBase.Run(service);
+        }
+
+        public static void StartOnConsoleApp(string[] args) => __startApp();
+        public static void StartOnWindowService(string[] args)
+        {
+            __threadWS = new Thread(new ThreadStart(() => __startApp()));
+            __threadWS.IsBackground = true;
+            __threadWS.Start();
+        }
+
+        public static void Stop()
+        {
+            __stopApp();
+            if (__threadWS != null) __threadWS.Abort();
+        }
+
+        #endregion;
     }
 }

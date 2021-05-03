@@ -1,8 +1,12 @@
 D:\tt\build\pdf2png\pdfium.dll
+D:\tt\build\pdf2png\pdf2png.exe.manifest
+D:\tt\build\pdf2png\pdf2png.application
 D:\tt\build\pdf2png\pdf2png.exe
 D:\tt\build\pdf2png\pdf2png.pdb
 D:\tt\core\pdf2png\obj\Debug\PdfiumViewer.PasswordForm.resources
 D:\tt\core\pdf2png\obj\Debug\pdf2png.csproj.GenerateResource.cache
 D:\tt\core\pdf2png\obj\Debug\pdf2png.csproj.CoreCompileInputs.cache
+D:\tt\core\pdf2png\obj\Debug\pdf2png.exe.manifest
+D:\tt\core\pdf2png\obj\Debug\pdf2png.application
 D:\tt\core\pdf2png\obj\Debug\pdf2png.exe
 D:\tt\core\pdf2png\obj\Debug\pdf2png.pdb
