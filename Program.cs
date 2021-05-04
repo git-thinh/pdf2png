@@ -113,11 +113,11 @@ namespace pdf2png
                                 var bsInfo = Encoding.UTF8.GetBytes(json);
                                 var lz = LZ4.LZ4Codec.Wrap(bsInfo);
                                 ////var decompressed = LZ4Codec.Unwrap(compressed);
-                                redis.HSET("DOC_INFO", docInfoId.ToString(), lz);
+                                redis.HSET("_DOC_INFO", docInfoId.ToString(), lz);
                             }
                             catch(Exception exInfo) {
-                                string errInfo = "DOC_INFO -> " + file + Environment.NewLine + exInfo.Message + Environment.NewLine + exInfo.StackTrace;
-                                redis.HSET("ERROR_PDF2PNG", "DOC_INFO:" + docId.ToString(), errInfo);
+                                string errInfo = "_DOC_INFO -> " + file + Environment.NewLine + exInfo.Message + Environment.NewLine + exInfo.StackTrace;
+                                redis.HSET("_ERROR:PDF2PNG:DOC_INFO", docInfoId.ToString(), errInfo);
                             }
                         }
 
@@ -127,8 +127,8 @@ namespace pdf2png
                         sizes.Add(string.Format("{0}:{1}", docId, i), slen);
                     }
 
-                    redis.HMSET("IMG_SIZE", sizes);
-                    redis.PUBLISH("DOC_INFO", docInfoId.ToString());
+                    redis.HMSET("_IMG_SIZE", sizes);
+                    redis.PUBLISH("__DOC_INFO_OUT", docInfoId.ToString());
                 }
             }
         }

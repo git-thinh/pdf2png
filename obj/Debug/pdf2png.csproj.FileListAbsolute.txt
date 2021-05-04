@@ -12,4 +12,3 @@ D:\tt\core\pdf2png\obj\Debug\pdf2png.csproj.CopyComplete
 D:\tt\core\pdf2png\obj\Debug\pdf2png.exe
 D:\tt\core\pdf2png\obj\Debug\pdf2png.pdb
 D:\tt\core\pdf2png\obj\Debug\pdf2png.TrustInfo.xml
-D:\tt\core\pdf2png\obj\Debug\pdf2png.csprojAssemblyReference.cache
