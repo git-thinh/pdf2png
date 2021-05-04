@@ -73,6 +73,7 @@ namespace pdf2png
                     int pageTotal = doc.PageCount;
                     long fileSize = new FileInfo(file).Length;
                     long docId = StaticDocument.BuildId(DOC_TYPE.IMG_OGRINAL, pageTotal, fileSize);
+                    long docInfoId = StaticDocument.BuildId(DOC_TYPE.INFO_OGRINAL, pageTotal, fileSize);
                     var sizes = new Dictionary<string, string>();
                     for (int i = 0; i < pageTotal; i++)
                     {
@@ -95,7 +96,6 @@ namespace pdf2png
                         {
                             try
                             {
-                                long docInfoId = StaticDocument.BuildId(DOC_TYPE.INFO_OGRINAL, pageTotal, fileSize);
                                 var docInfo = new oDocument()
                                 {
                                     id = docInfoId,
@@ -107,20 +107,17 @@ namespace pdf2png
                                     file_type = DOC_TYPE.PDF_OGRINAL,
                                     infos = doc.GetInformation().toDictionary(),
                                     metadata = "",
-                                    page_image = buf
+                                    //page_image = buf
                                 };
                                 var json = Newtonsoft.Json.JsonConvert.SerializeObject(docInfo, Newtonsoft.Json.Formatting.Indented);
-
-                                //var lz = LZ4Codec.Wrap(ms.ToArray());
+                                var bsInfo = Encoding.UTF8.GetBytes(json);
+                                var lz = LZ4.LZ4Codec.Wrap(bsInfo);
                                 ////var decompressed = LZ4Codec.Unwrap(compressed);
-                                ////long s1 = ms.Length;
-                                ////long s2 = lz.Length;
-
-                                redis.HSET("RAW:DOC_INFO", docInfoId.ToString(), json);
+                                redis.HSET("DOC_INFO", docInfoId.ToString(), lz);
                             }
                             catch(Exception exInfo) {
-                                string errInfo = "RAW:DOC_INFO -> " + file + Environment.NewLine + exInfo.Message + Environment.NewLine + exInfo.StackTrace;
-                                redis.HSET("RAW:ERROR_PDF2PNG", "RAW:DOC_INFO:" + docId.ToString(), errInfo);
+                                string errInfo = "DOC_INFO -> " + file + Environment.NewLine + exInfo.Message + Environment.NewLine + exInfo.StackTrace;
+                                redis.HSET("ERROR_PDF2PNG", "DOC_INFO:" + docId.ToString(), errInfo);
                             }
                         }
 
@@ -130,7 +127,8 @@ namespace pdf2png
                         sizes.Add(string.Format("{0}:{1}", docId, i), slen);
                     }
 
-                    redis.HMSET("RAW:IMG_SIZE", sizes);
+                    redis.HMSET("IMG_SIZE", sizes);
+                    redis.PUBLISH("DOC_INFO", docInfoId.ToString());
                 }
             }
         }
