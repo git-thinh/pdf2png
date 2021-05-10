@@ -202,6 +202,9 @@
     <Compile Include="..\_Shared\PdfiumViewer\StreamManager.cs">
       <Link>_Shared\PdfiumViewer\StreamManager.cs</Link>
     </Compile>
+    <Compile Include="..\_Shared\RedisBasic\IRedisBase.cs">
+      <Link>_Shared\RedisBasic\IRedisBase.cs</Link>
+    </Compile>
     <Compile Include="..\_Shared\RedisBasic\RedisBase.cs">
       <Link>_Shared\RedisBasic\RedisBase.cs</Link>
     </Compile>
@@ -214,14 +217,11 @@
     <Compile Include="..\_Shared\RedisBasic\ResponseException.cs">
       <Link>_Shared\RedisBasic\ResponseException.cs</Link>
     </Compile>
-    <Compile Include="..\_Shared\_Document\DOC_TYPE.cs">
-      <Link>_Shared\_Document\DOC_TYPE.cs</Link>
-    </Compile>
-    <Compile Include="..\_Shared\_Document\oDocument.cs">
-      <Link>_Shared\_Document\oDocument.cs</Link>
-    </Compile>
     <Compile Include="..\_Shared\_Document\StaticDocument.cs">
       <Link>_Shared\_Document\StaticDocument.cs</Link>
+    </Compile>
+    <Compile Include="..\_Shared\__tuple_this.cs">
+      <Link>_Shared\__tuple_this.cs</Link>
     </Compile>
     <Compile Include="MyService.cs">
       <SubType>Component</SubType>

@@ -17,28 +17,6 @@ namespace pdf2png
         #region [ CODE ]
 
         static RedisBase m_subcriber;
-        static bool _subscribe(string channel)
-        {
-            if (string.IsNullOrEmpty(channel)) return false;
-            channel = "<{" + channel + "}>";
-            try
-            {
-                StringBuilder sb = new StringBuilder();
-                sb.Append("*2\r\n");
-                sb.Append("$10\r\nPSUBSCRIBE\r\n");
-                sb.AppendFormat("${0}\r\n{1}\r\n", channel.Length, channel);
-
-                byte[] buf = Encoding.UTF8.GetBytes(sb.ToString());
-                var ok = m_subcriber.SendBuffer(buf);
-                var lines = m_subcriber.ReadMultiString();
-                //Console.WriteLine("\r\n\r\n{0}\r\n\r\n", string.Join(Environment.NewLine, lines));
-                return ok;
-            }
-            catch (Exception ex)
-            {
-            }
-            return false;
-        }
         static byte[] _pageAsBitmapBytes(PdfDocument doc, int pageCurrent)
         {
             int w = (int)doc.PageSizes[pageCurrent].Width;
@@ -72,7 +50,7 @@ namespace pdf2png
                 {
                     int pageTotal = doc.PageCount;
                     long fileSize = new FileInfo(file).Length;
-                    long docId = StaticDocument.BuildId(DOC_TYPE.IMG_OGRINAL, pageTotal, fileSize);
+                    long docId = StaticDocument.BuildId(DOC_TYPE.PNG_OGRINAL, pageTotal, fileSize);
                     long docInfoId = StaticDocument.BuildId(DOC_TYPE.INFO_OGRINAL, pageTotal, fileSize);
                     var sizes = new Dictionary<string, string>();
                     for (int i = 0; i < pageTotal; i++)
@@ -143,7 +121,7 @@ namespace pdf2png
             if (m_port_write == 0) m_port_write = 1000;
             if (m_port_read == 0) m_port_read = 1001;
             m_subcriber = new RedisBase(new RedisSetting(REDIS_TYPE.ONLY_SUBCRIBE, 1001));
-            _subscribe("__PDF2PNG_IN");
+            m_subcriber.PSUBSCRIBE("__PDF2PNG_IN");
 
             string[] a;
             string s;
